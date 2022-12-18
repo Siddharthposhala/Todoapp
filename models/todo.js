@@ -13,12 +13,89 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
+    static getTodos() {
+      return this.findAll();
+    }
+
+    static async showList() {
+      console.log("My Todo list \n");
+
+      console.log("Overdue");
+      // FILL IN HERE
+      console.log(
+        (await Todo.overdue())
+          .map((x) => {
+            x.displayableString();
+          })
+          .join("\n")
+      );
+
+      console.log("\n");
+
+      console.log("Due Today");
+      // FILL IN HERE
+      console.log(
+        (await Todo.dueToday())
+          .map((x) => {
+            x.displayableString();
+          })
+          .join("\n")
+      );
+
+      console.log("\n");
+
+      console.log("Due Later");
+      // FILL IN HERE
+      console.log(
+        (await Todo.dueLater())
+          .map((x) => {
+            x.displayableString();
+          })
+          .join("\n")
+      );
+    }
+
+    static async overdue() {
+      // FILL IN HERE TO RETURN OVERDUE ITEMS
+      return await Todo.findAll({
+        where: {
+          dueDate: { [Op.lt]: new Date().toLocaleDateString("en-CA") },
+        },
+      });
+    }
+
+    static async dueToday() {
+      // FILL IN HERE TO RETURN ITEMS DUE tODAY
+      return await Todo.findAll({
+        where: {
+          dueDate: { [Op.eq]: new Date().toLocaleDateString("en-CA") },
+        },
+      });
+    }
+
+    static async dueLater() {
+      // FILL IN HERE TO RETURN ITEMS DUE LATER
+      return await Todo.findAll({
+        where: {
+          dueDate: { [Op.gt]: new Date().toLocaleDateString("en-CA") },
+        },
+      });
+    }
+
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
     markAsCompleted() {
       return this.update({ completed: true });
+    }
+    displayableString() {
+      let checkbox = this.completed ? "[x]" : "[ ]";
+      return `${this.id}. ${checkbox} ${this.title} ${
+        this.dueDate == new Date().toLocaleDateString("en-CA")
+          ? ""
+          : this.dueDate
+      }`.trim();
     }
   }
   Todo.init(

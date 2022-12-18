@@ -1,6 +1,6 @@
-.Todo-item:hover .trash-icon{
-  display:block
+.Todo-item:hover .trash-icon {
+  display: block;
 }
-h5 { 
+h5 {
   display: inline;
 }

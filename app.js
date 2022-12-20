@@ -1,11 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const express = require("express");
+var csurf = require("tiny-csrf");
 const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 const path = require("path");
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("shh! some secret string"));
+app.use(csurf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 app.set("view engine", "ejs");
 
@@ -13,17 +18,21 @@ app.get("/", async function (request, response) {
   const overduetodos = await Todo.overdue();
   const duetodaytodos = await Todo.dueToday();
   const duelatertodos = await Todo.dueLater();
+  const completedtodos = await Todo.completedTodo();
   if (request.accepts("html")) {
     response.render("index", {
       overduetodos,
       duetodaytodos,
       duelatertodos,
+      completedtodos,
+      csrfToken: request.csrfToken(),
     });
   } else {
     response.json({
       overduetodos,
       duetodaytodos,
       duelatertodos,
+      completedtodos,
     });
   }
 });
@@ -52,15 +61,30 @@ app.get("/todos/:id", async function (request, response) {
 });
 
 app.post("/todos", async function (request, response) {
+  console.log("creating a todo", request.body);
   try {
-    const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
+    await Todo.addTodo({
+      title: request.body.title,
+      dueDate: request.body.dueDate,
+    });
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
 
+app.put("/todos/:id", async function (request, response) {
+  const todo = await Todo.findByPk(request.params.id);
+  try {
+    const val = Boolean(request.body.completed);
+    const updatedTodo = await todo.setCompletionStatus(val);
+    return response.json(updatedTodo);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
 app.put("/todos/:id/markAsCompleted", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
   try {

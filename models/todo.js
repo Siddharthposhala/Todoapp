@@ -60,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.lt]: new Date().toLocaleDateString("en-CA") },
+          completed: false,
         },
       });
     }
@@ -69,6 +70,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.eq]: new Date().toLocaleDateString("en-CA") },
+          completed: false,
         },
       });
     }
@@ -78,6 +80,15 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.gt]: new Date().toLocaleDateString("en-CA") },
+          completed: false,
+        },
+      });
+    }
+
+    static async completedTodo() {
+      return await Todo.findAll({
+        where: {
+          completed: true,
         },
       });
     }
@@ -86,9 +97,15 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
+    setCompletionStatus(completed) {
+      console.log(completed);
+      return this.update({ completed: completed });
+    }
+
     markAsCompleted() {
       return this.update({ completed: true });
     }
+
     displayableString() {
       let checkbox = this.completed ? "[x]" : "[ ]";
       return `${this.id}. ${checkbox} ${this.title} ${

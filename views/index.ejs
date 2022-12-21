@@ -11,24 +11,9 @@
     <script>
         var token = document
         .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content")
-        const updateTodoT = (id) =>{
-            fetch(`/todos/${id}/markAsCompleted`,{
-                method:"put",
-                headers:{"content-Type":"application/json"},
-                body: JSON.stringify({
-                    "_csrf":token
-                })
-            })
-            .then((res) => {
-                if(res.ok) {
-                    window.location.reload();
-                }
-            })
-            .catch((err) => console.error(err));
-        }
-
-        const updateTodoF = (id) =>{
+        .getAttribute("content");
+        
+        const updateTodo = (id) =>{
 
             fetch(`/todos/${id}`,{
                 method:"put",
@@ -80,7 +65,12 @@
                     </div>
                 </div>
             </form>
-            <%- include('todo') %>
+            <div>
+                <%- include('todo.ejs', {title: "Overdue", data: overdue}) %>
+                <%- include('todo.ejs', {title: "Due Today", data: dueToday}) %>
+                <%- include('todo.ejs', {title: "Due Later", data: dueLater}) %>
+                <%- include('todo.ejs', {title: "Completed Items", data: completed}) %>
+             </div>
         </div>
     </div>
     

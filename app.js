@@ -15,24 +15,24 @@ app.use(csurf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 app.set("view engine", "ejs");
 
 app.get("/", async function (request, response) {
-  const overduetodos = await Todo.overdue();
-  const duetodaytodos = await Todo.dueToday();
-  const duelatertodos = await Todo.dueLater();
-  const completedtodos = await Todo.completedTodo();
+  const overdue = await Todo.overdue();
+  const dueToday = await Todo.dueToday();
+  const dueLater = await Todo.dueLater();
+  const completed = await Todo.completedTodo();
   if (request.accepts("html")) {
     response.render("index", {
-      overduetodos,
-      duetodaytodos,
-      duelatertodos,
-      completedtodos,
+      overdue,
+      dueToday,
+      dueLater,
+      completed,
       csrfToken: request.csrfToken(),
     });
   } else {
     response.json({
-      overduetodos,
-      duetodaytodos,
-      duelatertodos,
-      completedtodos,
+      overdue,
+      dueToday,
+      dueLater,
+      completed,
     });
   }
 });
@@ -77,18 +77,7 @@ app.post("/todos", async function (request, response) {
 app.put("/todos/:id", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
   try {
-    const val = Boolean(request.body.completed);
-    const updatedTodo = await todo.setCompletionStatus(val);
-    return response.json(updatedTodo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
-app.put("/todos/:id/markAsCompleted", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
-  try {
-    const updatedTodo = await todo.markAsCompleted();
+    const updatedTodo = await todo.setCompletionStatus(todo.completed);
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);

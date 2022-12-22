@@ -48,6 +48,12 @@ describe("Todo Application", function () {
       completed: false,
       _csrf: csrfToken,
     });
+    await agent.post("/todos").send({
+      title: "Buy ps3",
+      dueDate: new Date().toISOString(),
+      completed: true,
+      _csrf: csrfToken,
+    });
 
     const groupedTodosResponse = await agent
       .get("/")

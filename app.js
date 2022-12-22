@@ -61,7 +61,7 @@ app.get("/todos/:id", async function (request, response) {
 });
 
 app.post("/todos", async function (request, response) {
-  console.log("creating a todo", request.body);
+  console.log("creating new todo", request.body);
   try {
     await Todo.addTodo({
       title: request.body.title,
@@ -75,9 +75,10 @@ app.post("/todos", async function (request, response) {
 });
 
 app.put("/todos/:id", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
+  console.log("we have to update a todo with ID:", request.params.id);
   try {
-    const updatedTodo = await todo.setCompletionStatus(todo.completed);
+    const todo = await Todo.findByPk(request.params.id);
+    const updatedTodo = await todo.setCompletionStatus(request.body.completed);
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
@@ -86,14 +87,10 @@ app.put("/todos/:id", async function (request, response) {
 });
 
 app.delete("/todos/:id", async function (request, response) {
+  console.log("Delete a todo with ID:", request.params.id);
   try {
     console.log("We have to delete a Todo with ID: ", request.params.id);
-
-    const todo = await Todo.destroy({
-      where: {
-        id: request.params.id,
-      },
-    });
+    const todo = await Todo.remove(request.params.id);
     response.send(todo ? true : false);
   } catch (error) {
     console.log(error);

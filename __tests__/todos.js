@@ -114,6 +114,7 @@ describe("Todo Application", function () {
     });
 
     const deletestatus = JSON.parse(deleteResponse.text);
+
     deletestatus
       ? expect(deletestatus).toBe(true)
       : expect(deletestatus).toBe(false);

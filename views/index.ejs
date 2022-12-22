@@ -14,11 +14,14 @@
         .getAttribute("content");
 
       const updateTodo = (id) => {
+        const bool = document.getElementById(`value${id}`).checked;
+        console.log(bool);
         fetch(`/todos/${id}`, {
           method: "put",
           headers: { "content-Type": "application/json" },
           body: JSON.stringify({
             _csrf: token,
+            completed: bool,
           }),
         })
           .then((res) => {
@@ -44,21 +47,6 @@
           })
           .catch((err) => console.error(err));
       };
-      //-----------------------------------------------------todo validation-----------------------------------------------------------------------
-
-      function validate() {
-        var todoname = new RegExp("^[^\s]+[a-zA-Z0-9 ]*$", "g");
-        let todoval = document.getElementById("todotext");
-        const validtodo = document.getElementById("todotext").value;
-
-        if (validtodo.match(todoname)) {
-          todoval.setCustomValidity("Enter valid Todo - start's without space");
-          todoval.reportValidity();
-        } else {
-          todoval.setCustomValidity("");
-        }
-      }
-      //---------------------------------------------------------------------------------------------------------------------------------------
     </script>
   </head>
   <body>
@@ -76,6 +64,9 @@
                 placeholder="what's next ?"
                 class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
                 required
+                pattern=".*\S+.*"
+                oninvalid="this.setCustomValidity('Enter valid Todo')"
+                oninput="this.setCustomValidity('')"
               />
             </div>
             <div class="flex-auto">
@@ -89,7 +80,6 @@
             <div class="flex-none">
               <button
                 type="submit"
-                onclick="validate()"
                 class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
               >
                 Add

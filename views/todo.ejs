@@ -11,7 +11,7 @@
     <div
       class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50"
     >
-      <input id="value<%= data[i].id %>" type="checkbox" onclick="updateTodo(
+      <input id="value<%=data[i].id%>" type="checkbox" onclick="updateTodo(
       '<%= data[i].id %>' )" <%= data[i].completed ? "checked" :"" %> class="w-4
       h-4 text-blue-600 bg-gray-100 rounded border-gray-300">
       <label

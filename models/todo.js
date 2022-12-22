@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    static getTodos() {
-      return this.findAll();
-    }
-
     static async showList() {
       console.log("My Todo list \n");
 
@@ -56,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: { [Op.lt]: new Date().toLocaleDateString("en-CA") },
           completed: false,
         },
+        order: [["id", "ASC"]],
       });
     }
 
@@ -65,6 +62,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: { [Op.eq]: new Date().toLocaleDateString("en-CA") },
           completed: false,
         },
+        order: [["id", "ASC"]],
       });
     }
 
@@ -74,6 +72,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: { [Op.gt]: new Date().toLocaleDateString("en-CA") },
           completed: false,
         },
+        order: [["id", "ASC"]],
       });
     }
 
@@ -85,13 +84,26 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static getTodos() {
+      return this.findAll();
+    }
+
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
     setCompletionStatus(completed) {
-      return this.update({ completed: !completed });
+      return this.update({ completed: completed });
     }
+
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+
     displayableString() {
       let checkbox = this.completed ? "[x]" : "[ ]";
       return `${this.id}. ${checkbox} ${this.title} ${

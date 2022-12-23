@@ -8,44 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    static async showList() {
-      console.log("My Todo list \n");
-
-      console.log("Overdue");
-
-      console.log(
-        (await Todo.overdue())
-          .map((x) => {
-            x.displayableString();
-          })
-          .join("\n")
-      );
-
-      console.log("\n");
-
-      console.log("Due Today");
-
-      console.log(
-        (await Todo.dueToday())
-          .map((x) => {
-            x.displayableString();
-          })
-          .join("\n")
-      );
-
-      console.log("\n");
-
-      console.log("Due Later");
-
-      console.log(
-        (await Todo.dueLater())
-          .map((x) => {
-            x.displayableString();
-          })
-          .join("\n")
-      );
-    }
-
     static async overdue() {
       return await Todo.findAll({
         where: {
@@ -102,15 +64,6 @@ module.exports = (sequelize, DataTypes) => {
           id: id,
         },
       });
-    }
-
-    displayableString() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${
-        this.dueDate == new Date().toLocaleDateString("en-CA")
-          ? ""
-          : this.dueDate
-      }`.trim();
     }
   }
   Todo.init(

@@ -224,18 +224,18 @@ app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    let pattern = new Regex("^\\s");
+    let pattern = new RegExp("^\\s");
     let result = Boolean(pattern.test(request.body.title));
     console.log(result);
-    if (request.body.dueDate.length == 0) {
-      request.flash("error", "Enter the dueDate");
-      return response.redirect("/todos");
-    }
     if (result) {
       request.flash("error", "Enter the title");
       return response.redirect("/todos");
     } else if (request.body.title.length < 5) {
       request.flash("error", "Title should be atleast 5 character");
+      return response.redirect("/todos");
+    }
+    if (request.body.dueDate.length == 0) {
+      request.flash("error", "Enter the dueDate");
       return response.redirect("/todos");
     }
     console.log("creating new todo", request.body);

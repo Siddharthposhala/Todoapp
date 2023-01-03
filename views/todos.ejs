@@ -12,8 +12,8 @@
       var token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
-
-      const updateTodo = (id) => {
+        
+        const updateTodo = (id) => {
         const bool = document.getElementById(`value${id}`).checked;
         console.log(bool);
         fetch(`/todos/${id}`, {
@@ -32,7 +32,8 @@
           .catch((err) => console.error(err));
       };
 
-      const deleteTodo = (id) => {
+
+       function deleteTodo(id){
         fetch(`/todos/${id}`, {
           method: "delete",
           headers: { "content-Type": "application/json" },

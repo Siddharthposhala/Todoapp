@@ -11,19 +11,21 @@
     <div
       class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50"
     >
-      <input id="value<%=data[i].id%>" type="checkbox" onclick="updateTodo(
-      '<%= data[i].id %>' )" <%= data[i].completed ? "checked" :"" %> class="w-4
-      h-4 text-blue-600 bg-gray-100 rounded border-gray-300">
+      <input id="value<%=data[i].id %>" class="w-4 h-4 text-blue-600 bg-gray-100
+      rounded border-gray-300" type="checkbox" <%=data[i].completed ? "checked"
+      : "" %> onclick="updateTodo(<%= data[i].id %>)">
+
       <label
         class="ml-2 text-sm text-gray-600 cursor-pointer"
         for="value<%= data[i].id %>"
       >
         <%= data[i].title %>
       </label>
+
       <a
         href="#"
         class="hidden trash-icon ml-2"
-        onclick="deleteTodo( '<%= data[i].id %>' )"
+        onclick="deleteTodo( `<%= data[i].id %>` )"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

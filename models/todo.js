@@ -70,8 +70,9 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
 
-    setCompletionStatus(completed) {
-      return this.update({ completed: completed });
+    setCompletionStatus(bool) {
+      var values = { completed: bool };
+      return this.update(values);
     }
 
     static async remove(id, userId) {

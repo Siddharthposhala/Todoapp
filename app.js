@@ -12,7 +12,6 @@ const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const flash = require("connect-flash");
 const path = require("path");
-var Regex = require("regex");
 
 const app = express();
 const saltRounds = 10;
@@ -29,7 +28,7 @@ app.use(
   session({
     secret: "my-super-secret-key-1234567890",
     Cookie: {
-      maxAge: 24 * 60 * 60 * 1000, //24hrs
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
@@ -263,7 +262,7 @@ app.put(
       const updatedTodo = await todo.setCompletionStatus(
         request.body.completed
       );
-      return response.json(updatedTodo);
+      response.json(updatedTodo);
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);

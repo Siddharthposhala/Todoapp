@@ -57,6 +57,14 @@
         <p class="py-2">
           <a href="/signout" class="text-green-600">Signout</a>
         </p>
+        <div class="flex-auto">
+          <h1>
+            User Name : 
+            <span class="text-green-600">
+            <%= firstName %> <%= lastName %>
+          </span>
+        </h1>
+        </div>
         <form action="/todos" name="f1" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
           <div class="flex gap-2 py-4">

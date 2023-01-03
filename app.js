@@ -95,12 +95,16 @@ app.get(
   async function (request, response) {
     try {
       const loggedInUser = request.user.id;
+      const firstName = request.user.firstName;
+      const lastName = request.user.lastName;
       const overdue = await Todo.overdue(loggedInUser);
       const dueToday = await Todo.dueToday(loggedInUser);
       const dueLater = await Todo.dueLater(loggedInUser);
       const completed = await Todo.completedTodo(loggedInUser);
       if (request.accepts("html")) {
         response.render("todos", {
+          firstName,
+          lastName,
           title: "Todo Application",
           overdue,
           dueToday,
@@ -110,6 +114,8 @@ app.get(
         });
       } else {
         response.json({
+          firstName,
+          lastName,
           overdue,
           dueToday,
           dueLater,
@@ -137,7 +143,7 @@ app.get("/login", (request, response) => {
 });
 
 app.get("/signout", (request, response) => {
-  request.logOut((err) => {
+  request.logout((err) => {
     if (err) {
       return next(err);
     }
@@ -148,7 +154,7 @@ app.get("/signout", (request, response) => {
 app.get("/todos", async function (request, response) {
   console.log("Processing list of all Todos ...");
   try {
-    const todo = await Todo.findAll({ order: [["id", "ASC"]] });
+    const todo = await Todo.findAll();
     return response.json(todo);
   } catch (error) {
     console.log(error);

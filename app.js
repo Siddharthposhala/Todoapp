@@ -80,7 +80,7 @@ passport.deserializeUser((id, done) => {
 
 app.get("/", async function (request, response) {
   if (request.user) {
-    return response.redirect("/todo");
+    return response.redirect("/todos");
   } else {
     response.render("index", {
       title: "Todo Application",
